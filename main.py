@@ -25,8 +25,9 @@ def start_game():
     """Initializes the game, welcomes the player, and routes them to the first room."""
     print("Welcome to Magic Tower The Text Adventure!")
     
-    # Prompting the user for their name using standard inputs
-    player_status["name"] = input("What is your name? ")
+    # Prompting the user for their name using standard inputs, if one hasn't already been Entered before.
+    if player_status["name"] == "":
+        player_status["name"] = input("What is your name? ")
     
     print(f"\nWelcome, {player_status['name']}!")
     print("You wake up in a dimly lit stone courtyard. Tied to a wooden pillar, you can see Two massive doors stand before you.")
@@ -61,7 +62,14 @@ def play_again(ending_name):
     print(f"ENDINGS UNLOCKED: {len(Unlocked_Endings)} / 11")
     for ending in sorted(Unlocked_Endings):
         print(f" - {ending}")
+    if len(Unlocked_Endings) == 11:
+         print("CONGRATULATIONS! You've gotten every ending in The Magic Tower. ")
+         print("I hope you have had fun playing this text adventure.")
+                
+    
     print("\n" + "=" * 50 + "\n")
+
+
 
     choice = get_choice(["play again", "quit"])
     if choice == "play again":
