@@ -11,51 +11,29 @@ well_filled = False
 water_lever_activated = False
 approached_well_before = False
 
+import sys
+
 player_status = {
     "name": "",
     "inventory": []
     
 }
 
+Unlocked_Endings = set()
+
 def start_game():
     """Initializes the game, welcomes the player, and routes them to the first room."""
     print("Welcome to Magic Tower The Text Adventure!")
-    print("Debug: to skip forward, type the name of a location, example: 'courtyard', 'dungeon_room', 'iron_room', 'wooden_room', 'bedroom'")
     
     # Prompting the user for their name using standard inputs
     player_status["name"] = input("What is your name? ")
-    if player_status["name"] == "courtyard":
-        player_status["name"] = "jack"
-        print("Debug: Jack has awoke in the courtyard.")
-        courtyard()
-
-    elif player_status["name"] == "dungeon_room":
-        player_status["name"] = "jack"
-        print("Debug: Jack has awoke in the dungeon room.")
-        dungeon_room()
-
-    elif player_status["name"] == "iron_room":
-        player_status["name"] = "jack"
-        print("Debug: Jack has awoke in the iron room.")
-        iron_room()
-
-    elif player_status["name"] == "wooden_room":
-        player_status["name"] = "jack"
-        print("Debug: Jack has awoke in the wooden room.")
-        wooden_room()
-
-    elif player_status["name"] == "bedroom":
-        player_status["name"] = "jack"
-        print("Debug: Jack has awoke in the bedroom.")
-        bedroom()
-
-    else:
-        print(f"\nWelcome, {player_status['name']}!")
-        print("You wake up in a dimly lit stone courtyard. Tied to a wooden pillar, you can see Two massive doors stand before you.")
-        print("Your choices will determine your fate. Type your choices carefully!")
+    
+    print(f"\nWelcome, {player_status['name']}!")
+    print("You wake up in a dimly lit stone courtyard. Tied to a wooden pillar, you can see Two massive doors stand before you.")
+    print("Your choices will determine your fate. Type your choices carefully!")
             
-        # Send the player to the first choice room
-        Bound_in_the_courtyard() 
+    # Send the player to the first choice room
+    Bound_in_the_courtyard() 
     
 def get_choice(options):
     """
@@ -68,6 +46,27 @@ def get_choice(options):
         if choice in options:
             return choice
         print("Invalid choice. Please type one of the exact options listed above.")
+
+# ==============================================================================
+# PLAY AGAIN FUNCTION
+# ==============================================================================
+
+def play_again(ending_name):
+    """Asks the player if they want to restart, resets inventory, and stops the current run."""
+    Unlocked_Endings.add(ending_name)
+
+    choice = get_choice(["play again", "quit"])
+    if choice == "play again":
+        player_status["inventory"].clear()  # Completely empties the inventory list
+        print("\n" + "=" * 50 + "\n")
+        start_game()
+        for ending in sorted(Unlocked_Endings):
+            print(f" - {ending}")
+        print("\n" + "=" * 50 + "\n")
+        start_game()  
+    else:
+        print("\nThanks for playing The Magic Tower! Goodbye.")
+    sys.exit()  # Stops all previous room functions from running
 
 # ==============================================================================
 # ROOM FUNCTIONS AND BRANCHING PATHWAYS
@@ -106,6 +105,7 @@ def Bound_in_the_courtyard():
         print("You are unable to breathe, the world goes dark and you parish. Your Journey Ends Before It can begin.")
         # ENDING 0: Ending At the Beginning Ending
         print("\n*** ENDING 0: Ending At the Beginning (DEFEAT)***")
+        play_again()
 
 
 def courtyard():
@@ -116,7 +116,7 @@ def courtyard():
     print("In front of you, a deep well sits in the center of the courtyard, its depths shrouded in darkness.")
     
     # Getting a validated input from the user
-    choice = get_choice(["left", "right", "approach well", "spawn item"])
+    choice = get_choice(["left", "right", "approach well", "spawn item(Debug)"])
     
     # If/Else logic handling the primary branching paths
     if choice == "left":
@@ -125,11 +125,12 @@ def courtyard():
     elif choice == "right":
         iron_room()
 
-    elif choice == "spawn item":
+    # the Debug helps to test all ending functions, and is staying here for repeat playthroughs to help get the other endings.
+    elif choice == "spawn item(Debug)":
         print("\nDebug: You have chosen to spawn an item. This is a debug feature.")
-        print("You can choose to spawn a 'Dagger', 'gold key', 'rusty key', 'silver key', 'ebony key', 'vial', 'crank handle', or 'ancient grimoire'.")
+        print("You can choose to spawn a 'Dagger', 'gold key', 'rusty key', 'silver key', 'ebony key', 'Vial', 'Crank handle', or 'Ancient grimoire'.")
         item_to_spawn = input("Which item would you like to spawn? ").strip()
-        if item_to_spawn in ["Dagger", "gold key", "rusty key", "silver key", "ebony key", "vial", "crank handle", "ancient grimoire"]:
+        if item_to_spawn in ["Dagger", "gold key", "rusty key", "silver key", "ebony key", "Vial", "Crank handle", "Ancient Grimoire"]:
             player_status["inventory"].append(item_to_spawn)
             print(f"\nDebug: {item_to_spawn} has been added to your inventory.")
         else:
@@ -154,20 +155,21 @@ def courtyard():
             choice = get_choice(["jump in", "drop stone in", "throw item in", "go back"])
 
             if choice == "jump in":
-                if "Well_filled" in player_status["inventory"]:
+                if "well_filled" in player_status["inventory"]:
 
                     print("\nYou take a deep breath and jump into the well. The water is freezing cold, but you manage to swim down.")
-                    print("At the bottom, you find a hidden passage leading to a secret chamber filled with treasure!")
-                    # ENDING 6: The Hidden Treasure Ending
-                    print("\n*** ENDING 6: The Hidden Treasure (VICTORY) ***")
-                    break  # Exit the loop and end the game
+                    print("At the bottom, you find a hidden passage leading to a secret cave filled with treasure!")
+                    print("The cave is so large and vast that you can't see where the treasure ends!")
+                    # ENDING 9: The Hidden Treasure Ending
+                    print("\n*** ENDING 9: The Hidden Treasure (VICTORY) ***")
+                    play_again()
                 else: 
                     # this can be achivied.
                     print("you jump into the well, you fall, all of a sudden you feel strange.") 
                     print("Your body shifts in to something else and you die, you are lost forever without knowing what you became.")
-                    # ENDING 7: The Unknown Transformation Ending
-                    print("\n*** ENDING 7: The Unknown Transformation (DEFEAT) ***")
-                    break  # Exit the loop and end the game
+                    # ENDING 1: The Unknown Transformation Ending
+                    print("\n*** ENDING 1: The Unknown Transformation (DEFEAT) ***")
+                    play_again()
 
             elif choice == "drop stone in":
                 print("\nYou drop a stone into the well. after a awhile a pile of fine sand gains flies up out of the well and land on the other side.")
@@ -202,7 +204,7 @@ def courtyard():
                                                         print("A key You've never seen before, made of a dark ebony material, You pick it up.")
                                                         print("The key is heavy and cold to the touch, and you can feel a strange energy emanating from it.")
                                                         player_status["inventory"].remove(choice)
-                                                        player_status["inventory"].append("Ebony")
+                                                        player_status["inventory"].append("ebony key")
 
                     elif choice == "gold key":
                                     print("\nYou throw the gold key into the well. A silver key flies out, and lands on the other side, You pick it up.")
@@ -254,6 +256,7 @@ def wooden_room():
             # Loop back into the room function so they can make their next move
             wooden_room()
         elif choice == "rusty key":
+            
             print("\nYou picked up the rusty key! It feels light in your pocket.")
             print("As you picked up the rusty key, you noticed the gold key had disappered.")
             # Modifying the list/dictionary inventory variable
@@ -282,9 +285,9 @@ def dungeon_room():
 
 # Present options based on whether they already have the Vial.
     if "Vial" not in player_status["inventory"]:
-        choice = get_choice(["take vial", "open chest", "go back"])
+        choice = get_choice(["take vial", "approach crank wheel", "open chest", "go back"])
     else:
-        choice = get_choice(["approach crank wheel", "approach chest", "go back"])
+        choice = get_choice(["approach crank wheel", "open chest", "go back"])
 
 
     if choice == "take vial":
@@ -299,10 +302,11 @@ def dungeon_room():
             if "water_lever_activated" in player_status["inventory"]:
                 print("You insert the crank handle into the wheel and turn it.")
                 print("The wheel creaks and the sound of water rushing can be heard behind the wall.")
-                player_status["inventory"].append("Well_filled")
+                player_status["inventory"].append("well_filled")
             else:
                 print("You insert the crank handle into the wheel and turn it.")
                 print("The wheel creaks, but nothing happens. Perhaps you need to activate the water flow first.")
+        dungeon_room()            
 
     
     
@@ -311,13 +315,15 @@ def dungeon_room():
         if "gold key" in player_status["inventory"]:
             print("\nYou insert the gold key into the lock. It turns with a satisfying click!")
             print("The chest explodes with brilliant white light, showering you in ancient treasure and vast riches.")
-            # ENDING 1: The Wealthy Explorer Ending
-            print("\n*** ENDING 1: The Wealthy Explorer (VICTORY) ***")
+            # ENDING 6: The Wealthy Explorer Ending
+            print("\n*** ENDING 6: The Wealthy Explorer (VICTORY) ***")
+            play_again()
         else:
             print("\nYou try to force the chest open, but a magical trap triggers!")
             print("Spikes shoot out from the walls. You did not prepare adequately.")
-            # ENDING 2: Trapped in the Darkness Ending
-            print("\n*** ENDING 2: Trapped in the Dark (DEFEAT) ***")
+            # ENDING 5: Trapped in the Darkness Ending
+            print("\n*** ENDING 5: Trapped in the Dark (DEFEAT) ***")
+            play_again()
 
     elif choice == "go back":
         wooden_room()
@@ -347,8 +353,9 @@ def iron_room():
                     print("You have become a master wizard who can weild ancient magic.")
                     print("You use the ebony key along with a special spell within the grimoire to unlock a hidden World only you can open the way too.")
                     print("You have become a master wizard who can weild ancient magic, known as the Master of ancient Magic from another world.")
-                    # Ending 9 : The Master of Ancient Magic from another World Ending
-                    print("\n*** ENDING 9: The Master of Ancient Magic from another World (VICTORY) ***")
+                    # Ending 10 : The Master of Ancient Magic from another World Ending
+                    print("\n*** ENDING 10: The Master of Ancient Magic from another World (VICTORY) ***")
+                    play_again()
                 else:
                     # this can be achivied.
                     print("\nYou scoop up a small vial worth of the bubbling green liquid and drink it.")
@@ -358,19 +365,22 @@ def iron_room():
                     print("You have become a master wizard who can weild ancient magic, you're known as the Master of ancient Magic.")
                     # Ending 8: Master of ancient Magic Ending
                     print("\n*** ENDING 8: The Master of Ancient Magic (VICTORY) ***")
+                    play_again()
 
             else:
                 print("\nYou scoop up a small vial worth of the bubbling green liquid and drink it.")
                 print("Your body begins to feel like it's burning from the inside, your magic capacity increases.")
                 print("you gain the magical abilities of a master wizard.")
-                # ENDING 3: Master of Magic Ending
-                print("\n*** ENDING 3: The New Master of Magic (VICTORY) ***")
+                # ENDING 7: Master of Magic Ending
+                print("\n*** ENDING 7: The New Master of Magic (VICTORY) ***")
+                play_again()
 
         else:
             print("\nYou attempt to drink from the cauldron without a vial. The liquid is too hot and burns your hand.")
             print("You collapse to the floor, as the overwhelming magical power corses throughout your body, unable to withstand the magical backlash.")
-            # ENDING 3.5: Too Hot To Handle Ending
-            print("\n*** ENDING 3.5: Too Hot To Handle (DEFEAT) ***")
+            # ENDING 2: Too Hot To Handle Ending
+            print("\n*** ENDING 2: Too Hot To Handle (DEFEAT) ***")
+            play_again()
 
 
     elif choice == "approach the door":
@@ -386,14 +396,16 @@ def iron_room():
     elif choice == "wake the dragon":
         print("\nYou approach the beast and shake its wing. It opens one massive, fiery eye.")
         print("Annoyed by your interruption, it sneezes a blast of fire, reducing you to ash.")
-        # ENDING 4: The Charred and Crispy Adventurer Ending
-        print("\n*** ENDING 4: Charred and Crispy Adventurer (DEFEAT) ***")
+        # ENDING 3: The Charred and Crispy Adventurer Ending
+        print("\n*** ENDING 3: Charred and Crispy Adventurer (DEFEAT) ***")
+        play_again()
         
     elif choice == "enter the portal":
         print("\nYou step through the swirling vortex. The world spins rapidly.")
         print("You open your eyes and realize you've been teleported right back outside of your own house.")
-        # ENDING 5: Escape to Home Ending
-        print("\n*** ENDING 5: There's No Place Like Home (ESCAPED) ***")
+        # ENDING 4: Escape to Home Ending
+        print("\n*** ENDING 4: There's No Place Like Home (ESCAPED) ***")
+        play_again()
 
     elif choice == "go back":
         courtyard()
@@ -419,6 +431,7 @@ def bedroom():
     elif choice == "pull lever":
             print("\nYou pull the lever, and hear the sound of water rushing behind the wall.")
             player_status["inventory"].append("water_lever_activated")
+            bedroom()
 
     elif choice == "go back":
             iron_room()
