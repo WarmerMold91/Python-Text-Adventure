@@ -1,6 +1,6 @@
 # ==============================================================================
-# STUDENT TEXT ADVENTURE GAME: The Magic Tower
-# Purpose: An engaging, branching choice-based text game.
+# WILLIAM'S TEXT ADVENTURE GAME: The Magic Tower
+# Purpose: A text andveture, a branching choice-based text adventure game, with 11 endings.
 # Requirements Met: Functions, Variables, Lists/Dictionaries, If/Else Logic, 
 #                   Consistent Inputs, Descriptive Comments, Multiple Endings.
 # ==============================================================================
@@ -51,6 +51,7 @@ def get_choice(options):
 # PLAY AGAIN FUNCTION
 # ==============================================================================
 
+# the endigns are numbered from 0 to 10 in how many items and steps are needed to reach them, at least that is how it should work.
 def play_again(ending_name):
     """Asks the player if they want to restart, resets inventory, and stops the current run."""
     Unlocked_Endings.add(ending_name)
@@ -59,7 +60,7 @@ def play_again(ending_name):
     if choice == "play again":
         player_status["inventory"].clear()  # Completely empties the inventory list
         print("\n" + "=" * 50 + "\n")
-        start_game()
+        print(f"ENDINGS UNLOCKED: {len(Unlocked_Endings)} / 11")
         for ending in sorted(Unlocked_Endings):
             print(f" - {ending}")
         print("\n" + "=" * 50 + "\n")
@@ -100,12 +101,14 @@ def Bound_in_the_courtyard():
         courtyard() #move to the courtyard function to continue the game
 
     elif choice == "wiggle free":
+        # this can be achieved.
+        # the 0 ending, that player are most likly to get first.
         print("\nYou attempt to wiggle free from the ropes.")
         print("But all you manage to do is slip down a bit, and end up with a rope choking you.")
         print("You are unable to breathe, the world goes dark and you parish. Your Journey Ends Before It can begin.")
         # ENDING 0: Ending At the Beginning Ending
         print("\n*** ENDING 0: Ending At the Beginning (DEFEAT)***")
-        play_again()
+        play_again("ENDING 0: Ending At the Beginning (DEFEAT)")
 
 
 def courtyard():
@@ -116,7 +119,7 @@ def courtyard():
     print("In front of you, a deep well sits in the center of the courtyard, its depths shrouded in darkness.")
     
     # Getting a validated input from the user
-    choice = get_choice(["left", "right", "approach well", "spawn item(Debug)"])
+    choice = get_choice(["left", "right", "approach well", "spawn item(debug)"])
     
     # If/Else logic handling the primary branching paths
     if choice == "left":
@@ -126,9 +129,9 @@ def courtyard():
         iron_room()
 
     # the Debug helps to test all ending functions, and is staying here for repeat playthroughs to help get the other endings.
-    elif choice == "spawn item(Debug)":
+    elif choice == "spawn item(debug)":
         print("\nDebug: You have chosen to spawn an item. This is a debug feature.")
-        print("You can choose to spawn a 'Dagger', 'gold key', 'rusty key', 'silver key', 'ebony key', 'Vial', 'Crank handle', or 'Ancient grimoire'.")
+        print("You can choose to spawn a 'Dagger', 'gold key', 'rusty key', 'silver key', 'ebony key', 'Vial', 'Crank handle', or 'Ancient Grimoire'.")
         item_to_spawn = input("Which item would you like to spawn? ").strip()
         if item_to_spawn in ["Dagger", "gold key", "rusty key", "silver key", "ebony key", "Vial", "Crank handle", "Ancient Grimoire"]:
             player_status["inventory"].append(item_to_spawn)
@@ -138,6 +141,7 @@ def courtyard():
         courtyard()  # Loop back into the courtyard function so they can make their next move
 
     elif choice == "approach well":
+        # this is the choice to get the 1st and 9th endings, along with getting items required for the other endings
         while True:
             if "well_filled" in player_status["inventory"]:
                 if "approached well" not in player_status["inventory"]:
@@ -156,20 +160,22 @@ def courtyard():
 
             if choice == "jump in":
                 if "well_filled" in player_status["inventory"]:
-
+                    # this can be achieved.
+                    # the 9th ending, requires all the rusty key, the silver key, and the crank handle along with pulling the lever to get.
                     print("\nYou take a deep breath and jump into the well. The water is freezing cold, but you manage to swim down.")
                     print("At the bottom, you find a hidden passage leading to a secret cave filled with treasure!")
                     print("The cave is so large and vast that you can't see where the treasure ends!")
                     # ENDING 9: The Hidden Treasure Ending
                     print("\n*** ENDING 9: The Hidden Treasure (VICTORY) ***")
-                    play_again()
+                    play_again("Ending 9: The Hidden Treasure (VICTORY)")
                 else: 
-                    # this can be achivied.
+                    # this can be achieved.
+                    # the 1st ending achieved after cutting yourself free.
                     print("you jump into the well, you fall, all of a sudden you feel strange.") 
                     print("Your body shifts in to something else and you die, you are lost forever without knowing what you became.")
                     # ENDING 1: The Unknown Transformation Ending
                     print("\n*** ENDING 1: The Unknown Transformation (DEFEAT) ***")
-                    play_again()
+                    play_again("ENDING 1: The Unknown Transformation (DEFEAT)")
 
             elif choice == "drop stone in":
                 print("\nYou drop a stone into the well. after a awhile a pile of fine sand gains flies up out of the well and land on the other side.")
@@ -275,7 +281,7 @@ def wooden_room():
 
 
 def dungeon_room():
-    """Deep in the left pathway. Contains Ending 1 and Ending 2 based on inventory."""
+    """Deep in the left pathway. Contains the 5th Ending and 6th Ending based on inventory."""
     print("\n--- The Deep Dungeon ---")
     print("At the bottom of the stairs there is a dimly lit dungeon. The air is damp and musty.")
     print("in the corner of the room there sits a small round table with a empty vial on top.")
@@ -299,6 +305,7 @@ def dungeon_room():
     elif choice == "approach crank wheel":
         print("\nYou approach the crank wheel. It is missing its handle, Without the handle it won't function.")
         if "Crank handle" in player_status["inventory"]:
+            # Required to get the 9th ending.
             if "water_lever_activated" in player_status["inventory"]:
                 print("You insert the crank handle into the wheel and turn it.")
                 print("The wheel creaks and the sound of water rushing can be heard behind the wall.")
@@ -313,23 +320,25 @@ def dungeon_room():
     elif choice == "open chest":
         # Checking conditional requirements (earned vs unearned state)
         if "gold key" in player_status["inventory"]:
+            # this can be achieved.
+            # the 6th ending that can be achieved after aqquiring the gold key from the preivious room, and opening the chest.
             print("\nYou insert the gold key into the lock. It turns with a satisfying click!")
             print("The chest explodes with brilliant white light, showering you in ancient treasure and vast riches.")
             # ENDING 6: The Wealthy Explorer Ending
             print("\n*** ENDING 6: The Wealthy Explorer (VICTORY) ***")
-            play_again()
+            play_again("ENDING 6: The Wealthy Explorer (VICTORY)")
+
         else:
+            # this can be achieved.
+            # the 5th ending, you'll get this ending if you try to open the chest with out the gold key.
             print("\nYou try to force the chest open, but a magical trap triggers!")
             print("Spikes shoot out from the walls. You did not prepare adequately.")
             # ENDING 5: Trapped in the Darkness Ending
             print("\n*** ENDING 5: Trapped in the Dark (DEFEAT) ***")
-            play_again()
+            play_again("ENDING 5: Trapped in the Dark (DEFEAT)")
 
     elif choice == "go back":
         wooden_room()
-
-    
-
 
 
 def iron_room():
@@ -346,6 +355,9 @@ def iron_room():
         if "Vial" in player_status["inventory"]:
             if "Ancient Grimoire" in player_status["inventory"]:
                 if "ebony key" in player_status["inventory"]:
+                    # this can be achieved.
+                    # the 10th ending, and the hardest one to achieve, it requires the rusty key, silver key, Ancient Grimoire, 
+                    # Vial, and the Ebony key.
                     print("\nYou scoop up a small vial worth of the bubbling green liquid and drink it.")
                     print("Your body begins to feel like it's burning from the inside, your magic capacity increases.")
                     print("you gain the magical abilities of a master wizard.")
@@ -355,9 +367,11 @@ def iron_room():
                     print("You have become a master wizard who can weild ancient magic, known as the Master of ancient Magic from another world.")
                     # Ending 10 : The Master of Ancient Magic from another World Ending
                     print("\n*** ENDING 10: The Master of Ancient Magic from another World (VICTORY) ***")
-                    play_again()
+                    play_again("ENDING 10: The Master of Ancient Magic from another World (VICTORY)")
+
                 else:
-                    # this can be achivied.
+                    # this can be achieved.
+                    # the 8th ending, requires the Vial, Rusty key, Silver key, and Ancient Grimoire
                     print("\nYou scoop up a small vial worth of the bubbling green liquid and drink it.")
                     print("Your body begins to feel like it's burning from the inside, your magic capacity increases.")
                     print("you gain the magical abilities of a master wizard.")
@@ -365,22 +379,26 @@ def iron_room():
                     print("You have become a master wizard who can weild ancient magic, you're known as the Master of ancient Magic.")
                     # Ending 8: Master of ancient Magic Ending
                     print("\n*** ENDING 8: The Master of Ancient Magic (VICTORY) ***")
-                    play_again()
+                    play_again("ENDING 8: The Master of Ancient Magic (VICTORY)")
 
             else:
+                # this can be achieved.
+                # The 7th Ending, All thats needed is the Vial to get this one.
                 print("\nYou scoop up a small vial worth of the bubbling green liquid and drink it.")
                 print("Your body begins to feel like it's burning from the inside, your magic capacity increases.")
                 print("you gain the magical abilities of a master wizard.")
                 # ENDING 7: Master of Magic Ending
                 print("\n*** ENDING 7: The New Master of Magic (VICTORY) ***")
-                play_again()
+                play_again("ENDING 7: The New Master of Magic (VICTORY)")
 
         else:
+            # this can be achieved.
+            # the 2nd ending, if you try to drink from the cauldron without the vial.
             print("\nYou attempt to drink from the cauldron without a vial. The liquid is too hot and burns your hand.")
             print("You collapse to the floor, as the overwhelming magical power corses throughout your body, unable to withstand the magical backlash.")
             # ENDING 2: Too Hot To Handle Ending
             print("\n*** ENDING 2: Too Hot To Handle (DEFEAT) ***")
-            play_again()
+            play_again("ENDING 2: Too Hot To Handle (DEFEAT)")
 
 
     elif choice == "approach the door":
@@ -394,18 +412,22 @@ def iron_room():
             iron_room()
                 
     elif choice == "wake the dragon":
+        # this can be achieved.
+        # the 3rd ending, if the mess with the dragon you get burnt.
         print("\nYou approach the beast and shake its wing. It opens one massive, fiery eye.")
         print("Annoyed by your interruption, it sneezes a blast of fire, reducing you to ash.")
         # ENDING 3: The Charred and Crispy Adventurer Ending
         print("\n*** ENDING 3: Charred and Crispy Adventurer (DEFEAT) ***")
-        play_again()
+        play_again("ENDING 3: Charred and Crispy Adventurer (DEFEAT)")
         
     elif choice == "enter the portal":
+        # this can be achieved.
+        # the 4th ending, the easiest victory ending to achieve with out items.
         print("\nYou step through the swirling vortex. The world spins rapidly.")
         print("You open your eyes and realize you've been teleported right back outside of your own house.")
         # ENDING 4: Escape to Home Ending
         print("\n*** ENDING 4: There's No Place Like Home (ESCAPED) ***")
-        play_again()
+        play_again("ENDING 4: There's No Place Like Home (ESCAPED)")
 
     elif choice == "go back":
         courtyard()
