@@ -56,13 +56,16 @@ def play_again(ending_name):
     """Asks the player if they want to restart, resets inventory, and stops the current run."""
     Unlocked_Endings.add(ending_name)
 
+
+    print("\n" + "=" * 50 + "\n")
+    print(f"ENDINGS UNLOCKED: {len(Unlocked_Endings)} / 11")
+    for ending in sorted(Unlocked_Endings):
+        print(f" - {ending}")
+    print("\n" + "=" * 50 + "\n")
+
     choice = get_choice(["play again", "quit"])
     if choice == "play again":
         player_status["inventory"].clear()  # Completely empties the inventory list
-        print("\n" + "=" * 50 + "\n")
-        print(f"ENDINGS UNLOCKED: {len(Unlocked_Endings)} / 11")
-        for ending in sorted(Unlocked_Endings):
-            print(f" - {ending}")
         print("\n" + "=" * 50 + "\n")
         start_game()  
     else:
