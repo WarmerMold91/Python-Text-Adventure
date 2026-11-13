@@ -178,7 +178,7 @@ def courtyard():
                     print("The cave is so large and vast that you can't see where the treasure ends!")
                     # ENDING 9: The Hidden Treasure Ending
                     print("\n*** ENDING 9: The Hidden Treasure (VICTORY) ***")
-                    play_again("Ending 9: The Hidden Treasure (VICTORY)")
+                    play_again("ENDING 9: The Hidden Treasure (VICTORY)")
                 else: 
                     # this can be achieved.
                     # the 1st ending achieved after cutting yourself free.
