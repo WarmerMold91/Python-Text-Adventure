@@ -1,21 +1,20 @@
 # ==============================================================================
 # WILLIAM'S TEXT ADVENTURE GAME: The Magic Tower
-# Purpose: A text andveture, a branching choice-based text adventure game, with 11 endings.
+# Purpose: A text adveture, a branching choice-based text adventure game, with 11 endings.
 # Requirements Met: Functions, Variables, Lists/Dictionaries, If/Else Logic, 
 #                   Consistent Inputs, Descriptive Comments, Multiple Endings.
 # ==============================================================================
 
 # Global variable to store player state
 # Utilizing a dictionary to keep track of items the player collects
-well_filled = False
-water_lever_activated = False
-approached_well_before = False
+
 
 import sys
 
 player_status = {
     "name": "",
-    "inventory": []
+    "inventory": [],
+    "times_key_Thrown_in_well" : 0
     
 }
 
@@ -74,6 +73,7 @@ def play_again(ending_name):
     choice = get_choice(["play again", "quit"])
     if choice == "play again":
         player_status["inventory"].clear()  # Completely empties the inventory list
+        player_status["times_key_Thrown_in_well"] = 0
         print("\n" + "=" * 50 + "\n")
         start_game()  
     else:
@@ -116,14 +116,14 @@ def Bound_in_the_courtyard():
         # the 0 ending, that player are most likly to get first.
         print("\nYou attempt to wiggle free from the ropes.")
         print("But all you manage to do is slip down a bit, and end up with a rope choking you.")
-        print("You are unable to breathe, the world goes dark and you parish. Your Journey Ends Before It can begin.")
+        print("You are unable to breathe, the world goes dark and you perish. Your Journey Ends Before It can begin.")
         # ENDING 0: Ending At the Beginning Ending
         print("\n*** ENDING 0: Ending At the Beginning (DEFEAT)***")
         play_again("ENDING 0: Ending At the Beginning (DEFEAT)")
 
 
 def courtyard():
-    times_key_Thrown_in_well = 0
+    
     """The starting area. Branches into two main paths: Left or Right."""
     print("To your left, a heavy wooden door creaks in the wind.")
     print("To your right, a iron-reinforced door glows with a faint green light.")
@@ -216,7 +216,7 @@ def courtyard():
                                     else:
                                         print("\nYou don't have a dagger to throw into the well.")
 
-                    elif times_key_Thrown_in_well >= 3 and choice in ["gold key", "rusty key", "silver key"]:
+                    elif player_status["times_key_Thrown_in_well"] >= 3 and choice in ["gold key", "rusty key", "silver key"]:
                                                         print("\nYou throw the key into the well. A different key flies out, and lands on the other side.")
                                                         print("A key You've never seen before, made of a dark ebony material, You pick it up.")
                                                         print("The key is heavy and cold to the touch, and you can feel a strange energy emanating from it.")
@@ -227,19 +227,19 @@ def courtyard():
                                     print("\nYou throw the gold key into the well. A silver key flies out, and lands on the other side, You pick it up.")
                                     player_status["inventory"].remove("gold key")
                                     player_status["inventory"].append("silver key")
-                                    times_key_Thrown_in_well += 1
+                                    player_status["times_key_Thrown_in_well"] += 1
                 
                     elif choice == "silver key":
                                     print("\nYou throw the silver key into the well. A rusty key flies out, and lands on the other side, You pick it up.")
                                     player_status["inventory"].remove("silver key")
                                     player_status["inventory"].append("rusty key")
-                                    times_key_Thrown_in_well += 1
+                                    player_status["times_key_Thrown_in_well"] += 1
                 
                     elif choice == "rusty key":
                                     print("\nYou throw the rusty key into the well. A gold key flies out, and lands on the other side, You pick it up.")
                                     player_status["inventory"].remove("rusty key")
                                     player_status["inventory"].append("gold key")
-                                    times_key_Thrown_in_well +=1
+                                    player_status["times_key_Thrown_in_well"] +=1
                 
                     elif choice == "go back":
                                     break  # Exit the loop and return to the courtyard
@@ -260,14 +260,14 @@ def wooden_room():
         
     if choice == "approach keys":
         if "gold key" in player_status["inventory"] or "rusty key" in player_status["inventory"] or "silver key" in player_status["inventory"] or "ebony key" in player_status["inventory"]:
-            print("\nYou have already taken a key from the pedestal, and the other disappeared.")
+            print("\nYou have already taken a key from the pedestal, and the other key had disappeared.")
             wooden_room()
-        print("You Approach the pedastal with the keys. You see a shiny gold key, and a dull rusty key. Which do you garb?")
+        print("You Approach the pedastal with the keys. You see a shiny gold key, and a dull rusty key. Which do you grab?")
         choice = get_choice(["gold key", "rusty key", "go back"])
 
         if choice == "gold key":
             print("\nYou picked up the gold key! It feels heavy in your pocket.")
-            print("As you picked up the gold key, you noticed the rusty key had disappered.")
+            print("As you picked up the gold key, you noticed the rusty key had disappeared.")
             # Modifying the list/dictionary inventory variable
             player_status["inventory"].append("gold key")
             # Loop back into the room function so they can make their next move
@@ -275,13 +275,13 @@ def wooden_room():
         elif choice == "rusty key":
             
             print("\nYou picked up the rusty key! It feels light in your pocket.")
-            print("As you picked up the rusty key, you noticed the gold key had disappered.")
+            print("As you picked up the rusty key, you noticed the gold key had disappeared.")
             # Modifying the list/dictionary inventory variable
             player_status["inventory"].append("rusty key")
             # Loop back into the room function so they can make their next move
             wooden_room()
         elif choice == "go back":
-            print("\nYou step away from the pedistal, hesitan to make a choice ")
+            print("\nYou step away from the pedestal, hesitant to make a choice ")
             wooden_room()
 
     elif choice == "descend":
@@ -318,12 +318,12 @@ def dungeon_room():
         if "Crank handle" in player_status["inventory"]:
             # Required to get the 9th ending.
             if "water_lever_activated" in player_status["inventory"]:
-                print("You insert the crank handle into the wheel and turn it.")
+                print("You attach the crank handle to the wheel and turn it.")
                 print("The wheel creaks and the sound of water rushing can be heard behind the wall.")
                 player_status["inventory"].append("well_filled")
             else:
-                print("You insert the crank handle into the wheel and turn it.")
-                print("The wheel creaks, but nothing happens. Perhaps you need to activate the water flow first.")
+                print("You attach the crank handle to the wheel and turn it.")
+                print("The wheel creaks, but nothing happens. Perhaps you need to activate something else first.")
         dungeon_room()            
 
     
@@ -375,7 +375,7 @@ def iron_room():
                     print("You open the Ancient Grimoire and begin to study the ancient spells and magic within.")
                     print("You have become a master wizard who can weild ancient magic.")
                     print("You use the ebony key along with a special spell within the grimoire to unlock a hidden World only you can open the way too.")
-                    print("You have become a master wizard who can weild ancient magic, known as the Master of ancient Magic from another world.")
+                    print("You have become a master wizard who can wield ancient magic, known as the Master of ancient Magic from another world.")
                     # Ending 10 : The Master of Ancient Magic from another World Ending
                     print("\n*** ENDING 10: The Master of Ancient Magic from another World (VICTORY) ***")
                     play_again("ENDING 10: The Master of Ancient Magic from another World (VICTORY)")
@@ -387,7 +387,7 @@ def iron_room():
                     print("Your body begins to feel like it's burning from the inside, your magic capacity increases.")
                     print("you gain the magical abilities of a master wizard.")
                     print("You open the Ancient Grimoire and begin to study the ancient spells and magic within.")
-                    print("You have become a master wizard who can weild ancient magic, you're known as the Master of ancient Magic.")
+                    print("You have become a master wizard who can wield ancient magic, you're known as the Master of ancient Magic.")
                     # Ending 8: Master of ancient Magic Ending
                     print("\n*** ENDING 8: The Master of Ancient Magic (VICTORY) ***")
                     play_again("ENDING 8: The Master of Ancient Magic (VICTORY)")
@@ -413,11 +413,14 @@ def iron_room():
 
 
     elif choice == "approach the door":
-        if "rusty key" in player_status["inventory"] or "unlocked bedroom" in player_status["inventory"]:
+        if "rusty key" in player_status["inventory"]:
             print("\nYou use the rusty key to unlock the door. Inside, you find what appears to be a small bed room.")
             player_status["inventory"].append("unlocked bedroom")
             bedroom()
-             
+        elif "unlocked bedroom" in player_status["inventory"]:
+            print("You enter the room, that you had unlocked before")
+            bedroom()
+
         else:
             print("\nYou grab the door knob, The door is locked. You need a key to open it.")
             iron_room()
@@ -445,14 +448,19 @@ def iron_room():
 
 
 def bedroom():
-    print("the only things of note in the room are a dusty locked cabinet, and a lever on the wall, with the label 'Primary water flow'.")
+    print("the only things of note in the room are a dusty locked cabinet, and a lever on the wall, with a sign that reads 'Primary water flow'.")
 
     choice = get_choice(["approach cabinet", "pull lever", "go back"])
 
     if choice == "approach cabinet":
-        if "silver key" in player_status["inventory"]:
+        if "Empty Cabinet" in player_status["inventory"]:
+                print("You've already opened the cabinet, and took everything from inside.")
+                bedroom()
+        elif "silver key" in player_status["inventory"]:
+            
             print("\nYou use the silver key to unlock the cabinet. Inside, you find a small crank handle, and a grimoire of ancient spells and magic.")
             print("You take the crank handle and ancient grimoire and add them to your inventory.")
+            player_status["inventory"].append("Empty Cabinet")
             player_status["inventory"].append("Crank handle")
             player_status["inventory"].append("Ancient Grimoire")
             bedroom()
@@ -462,8 +470,12 @@ def bedroom():
             bedroom()
             
     elif choice == "pull lever":
+        if "water_lever_activated" not in player_status["inventory"]:
             print("\nYou pull the lever, and hear the sound of water rushing behind the wall.")
             player_status["inventory"].append("water_lever_activated")
+            bedroom()
+        else:
+            print ("\nYou've Already pulled the lever, pulling it again wouldn't change anything.")
             bedroom()
 
     elif choice == "go back":
