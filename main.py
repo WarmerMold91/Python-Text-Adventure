@@ -56,7 +56,7 @@ def play_again(ending_name):
     """Asks the player if they want to restart, resets inventory, and stops the current run."""
     Unlocked_Endings.add(ending_name)
 
-
+    #Displays the endings, their number and names.
     print("\n" + "=" * 50 + "\n")
     print(f"ENDINGS UNLOCKED: {len(Unlocked_Endings)} / 11")
     for ending in sorted(Unlocked_Endings):
@@ -69,7 +69,7 @@ def play_again(ending_name):
     print("\n" + "=" * 50 + "\n")
 
 
-
+    #Prompts the player with the choice to quit, or play again.
     choice = get_choice(["play again", "quit"])
     if choice == "play again":
         player_status["inventory"].clear()  # Completely empties the inventory list
@@ -78,7 +78,7 @@ def play_again(ending_name):
         start_game()  
     else:
         print("\nThanks for playing The Magic Tower! Goodbye.")
-    sys.exit()  # Stops all previous room functions from running
+    sys.exit()  # Stops all previous room functions from running and stops the program.
 
 # ==============================================================================
 # ROOM FUNCTIONS AND BRANCHING PATHWAYS
@@ -90,6 +90,7 @@ def Bound_in_the_courtyard():
     if "Dagger" not in player_status["inventory"]:
         print("\n--- The Sunken Courtyard ---")
         print("You awaken in a sunken courtyard, surrounded by ancient stone walls, and loosely tied to a wooden pillar.")
+        print("\n Your hand is loose enough to try and grab your dagger, but you feel like you can just slip out of the ropes.")
     else:
         print("with the dagger in hand what now?")
 
@@ -113,7 +114,7 @@ def Bound_in_the_courtyard():
 
     elif choice == "wiggle free":
         # this can be achieved.
-        # the 0 ending, that player are most likly to get first.
+        # the 0 ending, that player are most likly to get first, if the try and wiggle free to escape.
         print("\nYou attempt to wiggle free from the ropes.")
         print("But all you manage to do is slip down a bit, and end up with a rope choking you.")
         print("You are unable to breathe, the world goes dark and you perish. Your Journey Ends Before It can begin.")
@@ -152,7 +153,7 @@ def courtyard():
         courtyard()  # Loop back into the courtyard function so they can make their next move
 
     elif choice == "approach well":
-        # this is the choice to get the 1st and 9th endings, along with getting items required for the other endings
+        # this is the choice to get the 1st and 9th endings, along with getting items required for the other endings.
         while True:
             if "well_filled" in player_status["inventory"]:
                 if "approached well" not in player_status["inventory"]:
@@ -174,8 +175,8 @@ def courtyard():
                     # this can be achieved.
                     # the 9th ending, requires all the rusty key, the silver key, and the crank handle along with pulling the lever to get.
                     print("\nYou take a deep breath and jump into the well. The water is freezing cold, but you manage to swim down.")
-                    print("At the bottom, you find a hidden passage leading to a secret cave filled with treasure!")
-                    print("The cave is so large and vast that you can't see where the treasure ends!")
+                    print("At the bottom, you see a faint light and swim towards it, you find a air pocket with a hidden passage leading to")
+                    print("a secret cave filled with treasure! The cave is so large and vast that you can't see where the treasure ends!")
                     # ENDING 9: The Hidden Treasure Ending
                     print("\n*** ENDING 9: The Hidden Treasure (VICTORY) ***")
                     play_again("ENDING 9: The Hidden Treasure (VICTORY)")
@@ -189,14 +190,17 @@ def courtyard():
                     play_again("ENDING 1: The Unknown Transformation (DEFEAT)")
 
             elif choice == "drop stone in":
-                print("\nYou drop a stone into the well. after a awhile a pile of fine sand gains flies up out of the well and land on the other side.")
-                 
+                if "well_filled" not in player_status["inventory"]:
+                    print("\nYou drop a stone into the well. after a awhile a pile of fine sand gains flies up out of the well and land on the other side.")
+                else:
+                    print("the stone falls down the well and splashes when it hits the water.")
+                
             elif choice == "go back":
                 courtyard()
                 break  # Exit the loop and return to the courtyard
 
             elif choice == "throw item in":
-                
+                # required to get lots of the endings.
                 while True:
                     
                     if "gold key" in player_status["inventory"]:
@@ -209,37 +213,65 @@ def courtyard():
                         choice = get_choice(["dagger", "go back"])
         
                     if choice == "dagger":
-                                    if "Dagger" in player_status["inventory"]:
-                                        print("\nYou throw the dagger into the well. A sword flies out, and lands on the other side, You pick it up.")
-                                        player_status["inventory"].remove("Dagger")
-                                        player_status["inventory"].append("Sword")
+                                    if "well_filled" not in player_status["inventory"]:
+                                        if "Dagger" in player_status["inventory"]:
+                                            print("\nYou throw the dagger into the well. A sword flies out, and lands on the other side, You pick it up.")
+                                            player_status["inventory"].remove("Dagger")
+                                            player_status["inventory"].append("Sword")
+                                        else:
+                                            print("\nYou don't have a dagger to throw into the well.")
                                     else:
-                                        print("\nYou don't have a dagger to throw into the well.")
+                                        if "Dagger" in player_status["inventory"]:
+                                            print("You throw your dagger into the filled well, it hits the water and makes a splash")
+                                            print("\nYou've lost your dagger.")
+                                            player_status["inventory"].remove("Dagger")
+                                        else:
+                                            if "Sword" in player_status["inventory"]:
+                                                print("You no longer have a dagger to throw into the water filled well, not after you threw it in and got a sword.")
+                                            else:
+                                                print("You don't have a dagger to throw into the water filled well.")
 
-                    elif player_status["times_key_Thrown_in_well"] >= 3 and choice in ["gold key", "rusty key", "silver key"]:
-                                                        print("\nYou throw the key into the well. A different key flies out, and lands on the other side.")
-                                                        print("A key You've never seen before, made of a dark ebony material, You pick it up.")
-                                                        print("The key is heavy and cold to the touch, and you can feel a strange energy emanating from it.")
-                                                        player_status["inventory"].remove(choice)
-                                                        player_status["inventory"].append("ebony key")
+
+                    elif player_status["times_key_Thrown_in_well"] >= 9 and choice in ["gold key", "rusty key", "silver key"]:
+                        if "well_filled" not in player_status["inventory"]:
+                            print("\nYou throw the key into the well. A different key flies out, and lands on the other side.")
+                            print("A key You've never seen before, made of a dark ebony material, You pick it up.")
+                            print("The key is heavy and cold to the touch, and you can feel a strange energy emanating from it.")
+                            player_status["inventory"].remove(choice)
+                            player_status["inventory"].append("ebony key")
+                        else:
+                             print("You throw your key down the well, with how many times you threw it down there you could've guessed that")
+                             print("\nnow that the wells filled up with water it wouldn't come flying back up, with that in mind the key hits")
+                             print("\nthe water with a really loud splash, that seems to echo for a long time.")
+
 
                     elif choice == "gold key":
-                                    print("\nYou throw the gold key into the well. A silver key flies out, and lands on the other side, You pick it up.")
-                                    player_status["inventory"].remove("gold key")
-                                    player_status["inventory"].append("silver key")
-                                    player_status["times_key_Thrown_in_well"] += 1
+                        if "well_filled" not in player_status["inventory"]:
+                            print("\nYou throw the gold key into the well. A silver key flies out, and lands on the other side, You pick it up.")
+                            player_status["inventory"].remove("gold key")
+                            player_status["inventory"].append("silver key")
+                            player_status["times_key_Thrown_in_well"] += 1
+                        else:
+                             print("You throw the gold key down the water filled well, it hits the water with a loud splash.")
                 
                     elif choice == "silver key":
-                                    print("\nYou throw the silver key into the well. A rusty key flies out, and lands on the other side, You pick it up.")
-                                    player_status["inventory"].remove("silver key")
-                                    player_status["inventory"].append("rusty key")
-                                    player_status["times_key_Thrown_in_well"] += 1
+                        if "well_filled" not in player_status["inventory"]:
+                            print("\nYou throw the silver key into the well. A rusty key flies out, and lands on the other side, You pick it up.")
+                            player_status["inventory"].remove("silver key")
+                            player_status["inventory"].append("rusty key")
+                            player_status["times_key_Thrown_in_well"] += 1
+                        else:
+                            print("You throw the silver key down the well, with it filled with water it makes a decently loud splash.")
                 
                     elif choice == "rusty key":
-                                    print("\nYou throw the rusty key into the well. A gold key flies out, and lands on the other side, You pick it up.")
-                                    player_status["inventory"].remove("rusty key")
-                                    player_status["inventory"].append("gold key")
-                                    player_status["times_key_Thrown_in_well"] +=1
+                        if "well_filled" not in player_status["inventory"]:
+                            print("\nYou throw the rusty key into the well. A gold key flies out, and lands on the other side, You pick it up.")
+                            player_status["inventory"].remove("rusty key")
+                            player_status["inventory"].append("gold key")
+                            player_status["times_key_Thrown_in_well"] +=1
+                        else:
+                            print("You throw the rusty key down the water filled well, as it hits the water surface it makes a quite splash.")
+                            print("The rusty key will probably sit down their gathering rust for an unknown amount of time.")
                 
                     elif choice == "go back":
                                     break  # Exit the loop and return to the courtyard
@@ -253,13 +285,13 @@ def wooden_room():
 
    
     # Present options based on whether they already have the Gold key
-    if "gold key" not in player_status["inventory"] or "rusty key" not in player_status["inventory"]:
+    if "gold key" not in player_status["inventory"] and "rusty key" not in player_status["inventory"] and "silver key" not in player_status["inventory"] and "ebony key" not in player_status["inventory"] :
         choice = get_choice(["approach keys", "descend", "go back"])
     else:
         choice = get_choice(["descend", "go back"])
         
     if choice == "approach keys":
-        if "gold key" in player_status["inventory"] or "rusty key" in player_status["inventory"] or "silver key" in player_status["inventory"] or "ebony key" in player_status["inventory"]:
+        if "gold key" in player_status["inventory"] and "rusty key" in player_status["inventory"] and "silver key" in player_status["inventory"] and "ebony key" in player_status["inventory"]:
             print("\nYou have already taken a key from the pedestal, and the other key had disappeared.")
             wooden_room()
         print("You Approach the pedastal with the keys. You see a shiny gold key, and a dull rusty key. Which do you grab?")
@@ -343,7 +375,7 @@ def dungeon_room():
             # this can be achieved.
             # the 5th ending, you'll get this ending if you try to open the chest with out the gold key.
             print("\nYou try to force the chest open, but a magical trap triggers!")
-            print("Spikes shoot out from the walls. You did not prepare adequately.")
+            print("Spikes shoot out from the walls. You did not prepare adequately, and die as the world fades to black around you.")
             # ENDING 5: Trapped in the Darkness Ending
             print("\n*** ENDING 5: Trapped in the Dark (DEFEAT) ***")
             play_again("ENDING 5: Trapped in the Dark (DEFEAT)")
@@ -448,6 +480,7 @@ def iron_room():
 
 
 def bedroom():
+    print("\n--- The Bedroom ---")
     print("the only things of note in the room are a dusty locked cabinet, and a lever on the wall, with a sign that reads 'Primary water flow'.")
 
     choice = get_choice(["approach cabinet", "pull lever", "go back"])
